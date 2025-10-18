@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <title>Schatzkarte</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      margin: 20px;
+      background: #fdf5e6;
+    }
+    h1 { margin-bottom: 10px; }
+    #map {
+      position: relative;
+      width: 800px;
+      max-width: 95%;
+      height: 600px;
+      margin: 0 auto 20px auto;
+      background: url('map.jpg') no-repeat center center;
+      background-size: cover;
+      border: 4px solid #8b5a2b;
+      border-radius: 8px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+    }
+    .island {
+      position: absolute;
+      min-width: 90px;
+      height: 40px;
+      padding: 8px;
+      background-color: rgba(255, 250, 205, 0.95);
+      border-radius: 20px;
+      border: 2px solid #b8860b;
+      color: #5a3e00;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      user-select: none;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+      transition: transform 0.12s ease, box-shadow 0.12s ease;
+    }
+    .island:hover { transform: translateY(-4px); box-shadow: 0 10px 18px rgba(0,0,0,0.18); }
+
+    /* Positionen (anpassbar) */
+    #skull { top: 80px; left: 120px; }
+    #treasure { top: 260px; left: 380px; }
+    #shark { top: 420px; left: 620px; }
+
+    #result {
+      font-size: 1.2rem;
+      margin-top: 10px;
+      min-height: 1.6em;
+    }
+
+    /* Mobile tweak */
+    @media (max-width: 600px) {
+      #map { height: 420px; }
+      .island { min-width: 76px; height: 36px; font-size: 0.9rem; padding: 6px; }
+    }
+  </style>
+</head>
+<body>
+  <h1>🗺️ Wähle eine Insel</h1>
+
+  <div id="map" aria-label="Schatzkarte">
+    <div id="skull" class="island" role="button" tabindex="0" onclick="explore('skull')">☠️ Skull Island</div>
+    <div id="treasure" class="island" role="button" tabindex="0" onclick="explore('treasure')">💰 Treasure Cove</div>
+    <div id="shark" class="island" role="button" tabindex="0" onclick="explore('shark')">🦈 Shark Bay</div>
+  </div>
+
+  <h2 id="result" aria-live="polite"></h2>
+
+  <script>
+    // Liest 'bug' Query-Parameter (true/false)
+    function readBugFlag() {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get('bug') === 'true';
+    }
+
+    const bugMode = readBugFlag();
+
+    // explore() behält Logik wie vorher — unterscheidet bugMode
+    function explore(place) {
+      let msg;
+      if (bugMode) {
+        // BUG: Schatz wurde fälschlicherweise auf Skull Island verschoben
+        if (place === 'skull') {
+          msg = '🎉 Du hast den Schatz gefunden!';
+        } else if (place === 'treasure') {
+          msg = '💨 Leere Kisten – jemand war schneller!';
+        } else {
+          msg = '🦈 Hier gibt’s nur Haie!';
+        }
+      } else {
+        // Normaler Modus: Treasure Cove ist die richtige Insel
+        if (place === 'treasure') {
+          msg = '🎉 Du hast den Schatz gefunden!';
+        } else if (place === 'skull') {
+          msg = '☠️ Nur Knochen und Geister hier...';
+        } else {
+          msg = '🦈 Hier gibt’s nur Haie!';
+        }
+      }
+
+      // Zeige Ergebnis im Dom
+      const out = document.getElementById('result');
+      if (out) {
+        out.textContent = msg;
+      } else {
+        alert(msg);
+      }
+    }
+
+    // Tastatur-Zugänglichkeit für Insel-Buttons
+    document.querySelectorAll('.island').forEach(el => {
+      el.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          el.click();
+        }
+      });
+    });
+  </script>
+</body>
+</html>
