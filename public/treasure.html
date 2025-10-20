@@ -48,6 +48,8 @@
     #skull { top: 80px; left: 120px; }
     #treasure { top: 260px; left: 380px; }
     #shark { top: 420px; left: 620px; }
+  /* Codebeard appears only in bug mode */
+  #codebeard { top: 320px; left: 200px; display: none; }
 
     #result {
       font-size: 1.2rem;
@@ -69,6 +71,8 @@
     <div id="skull" class="island" role="button" tabindex="0" onclick="explore('skull')">☠️ Skull Island</div>
     <div id="treasure" class="island" role="button" tabindex="0" onclick="explore('treasure')">💰 Treasure Cove</div>
     <div id="shark" class="island" role="button" tabindex="0" onclick="explore('shark')">🦈 Shark Bay</div>
+    <!-- Codebeard: shown only in bug mode; has pirate icon and is new treasure location in bug mode -->
+    <div id="codebeard" class="island" role="button" tabindex="0" onclick="explore('codebeard')">🏴‍☠️ Codebeard</div>
   </div>
 
   <h2 id="result" aria-live="polite"></h2>
@@ -82,28 +86,36 @@
 
     const bugMode = readBugFlag();
 
+    // Wenn Bug-Mode aktiv, Codebeard sichtbar machen
+    if (bugMode) {
+      const cb = document.getElementById('codebeard');
+      if (cb) cb.style.display = 'flex';
+    }
+
     // explore() behält Logik wie vorher — unterscheidet bugMode
     function explore(place) {
       let msg;
-      if (bugMode) {
-        // BUG: Schatz wurde fälschlicherweise auf Skull Island verschoben
-        if (place === 'skull') {
-          msg = '🎉 Du hast den Schatz gefunden!';
-        } else if (place === 'treasure') {
-          msg = '💨 Leere Kisten – jemand war schneller!';
+        if (bugMode) {
+          // In bug mode: the treasure is at CodeBeard. Shark Bay remains a shark bay.
+          if (place === 'codebeard') {
+            msg = '🎉 Captn CodeBeard stole the treasure!';
+          } else if (place === 'shark') {
+            msg = '🦈 Just sharks here.';
+          } else if (place === 'skull') {
+            msg = '☠️ Only ghosts and old bones...';
+          } else {
+            msg = '💨 Empty chests – someone was faster!';
+          }
         } else {
-          msg = '🦈 Hier gibt’s nur Haie!';
+          // Normal mode: Treasure Cove is the correct island
+          if (place === 'treasure') {
+            msg = '🎉 You found the treasure!';
+          } else if (place === 'skull') {
+            msg = '☠️ Only ghosts and old bones...';
+          } else {
+            msg = '🦈 Just sharks here.';
+          }
         }
-      } else {
-        // Normaler Modus: Treasure Cove ist die richtige Insel
-        if (place === 'treasure') {
-          msg = '🎉 Du hast den Schatz gefunden!';
-        } else if (place === 'skull') {
-          msg = '☠️ Nur Knochen und Geister hier...';
-        } else {
-          msg = '🦈 Hier gibt’s nur Haie!';
-        }
-      }
 
       // Zeige Ergebnis im Dom
       const out = document.getElementById('result');
