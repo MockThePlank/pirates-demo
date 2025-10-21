@@ -4,6 +4,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
+    "start:bugmode": "BUG_MODE=1 node server.js",
     "playwright:install": "npx playwright install",
     "test:e2e": "npx playwright test",
     "show-report": "npx playwright show-report"

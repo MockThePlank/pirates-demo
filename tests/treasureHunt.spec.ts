@@ -15,21 +15,21 @@ test('Pirate-Demo Tests', async ({ page }) => {
   await test.step('visit Skull Island', async () => {
     await page.getByRole('button', { name: '☠️ Skull Island' }).click();
     await page.waitForTimeout(2000);
-    await expect(page.getByRole('heading', { name: '☠️ Nur Knochen und Geister' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: '☠️ Only ghosts and old bones...' })).toBeVisible();
     await page.waitForTimeout(2000);
   });
   await test.step('visit Shark Bay', async () => {
     await page.getByRole('button', { name: '🦈 Shark Bay' }).click();
     await page.waitForTimeout(2000);
-    await expect(page.getByRole('heading', { name: '🦈 Hier gibt’s nur Haie!' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: '🦈 Just sharks here.' })).toBeVisible();
     await page.waitForTimeout(2000);
   });
   await test.step('find Treasure Cove', async () => {
     await page.getByRole('button', { name: '💰 Treasure Cove' }).click();await page.waitForTimeout(2000);
     await page.waitForTimeout(2000);
-    await expect(page.getByRole('heading', { name: '🎉 Du hast den Schatz gefunden!' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: '🎉 You found the treasure!' })).toBeVisible();
     await page.waitForTimeout(2000);
   });
   
-  await page.close();
+  //await page.close();
 });
