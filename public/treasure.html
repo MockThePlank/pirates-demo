@@ -14,9 +14,9 @@
     h1 { margin-bottom: 10px; }
     #map {
       position: relative;
-      width: 800px;
-      max-width: 95%;
-      height: 600px;
+      /* Ensure the card fits headful Playwright viewports while keeping the map ratio */
+      width: min(800px, 90vw, calc(70vh * 4 / 3));
+      aspect-ratio: 4 / 3;
       margin: 0 auto 20px auto;
       background: url('map.jpg') no-repeat center center;
       background-size: cover;
@@ -26,30 +26,59 @@
     }
     .island {
       position: absolute;
-      min-width: 90px;
-      height: 40px;
-      padding: 8px;
-      background-color: rgba(255, 250, 205, 0.95);
-      border-radius: 20px;
-      border: 2px solid #b8860b;
-      color: #5a3e00;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      transform: translate(-50%, -50%);
+      width: var(--button-width, 22%);
+      height: var(--button-height, 12%);
+      padding: 0;
+      border: 3px solid rgba(196, 154, 82, 0.9);
+      border-radius: 18px;
+      background-color: transparent;
       cursor: pointer;
       user-select: none;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.12);
-      transition: transform 0.12s ease, box-shadow 0.12s ease;
+      appearance: none;
+      -webkit-appearance: none;
+      outline: none;
+      transition: box-shadow 0.12s ease, transform 0.12s ease;
     }
-    .island:hover { transform: translateY(-4px); box-shadow: 0 10px 18px rgba(0,0,0,0.18); }
+    .island:hover,
+    .island:focus-visible {
+      box-shadow: 0 0 0 4px rgba(255, 248, 220, 0.35);
+      transform: translate(-50%, -50%) scale(1.04);
+    }
+    .island:active {
+      transform: translate(-50%, -50%) scale(0.99);
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
 
     /* Positionen (anpassbar) */
-    #skull { top: 80px; left: 120px; }
-    #treasure { top: 260px; left: 380px; }
-    #shark { top: 420px; left: 620px; }
-  /* Codebeard appears only in bug mode */
-  #codebeard { top: 320px; left: 200px; display: none; }
+    #skull { top: 21%; left: 17%; --button-width: 17%; --button-height: 18%; }
+    #treasure { top: 55%; left: 52%; --button-width: 20%; --button-height: 14%; }
+    #shark { top: 73%; left: 82%; --button-width: 20%; --button-height: 14%; }
+    /* Codebeard appears only in bug mode */
+    #codebeard {
+      top: 58%;
+      left: 30%;
+      --button-width: 16%;
+      --button-height: 16%;
+      display: none;
+    }
+    #codebeard.island--icon {
+      background-image: url('pirate_profile_round.png');
+      background-repeat: no-repeat;
+      background-size: contain;
+      background-position: center;
+    }
 
     #result {
       font-size: 1.2rem;
@@ -59,21 +88,29 @@
 
     /* Mobile tweak */
     @media (max-width: 600px) {
-      #map { height: 420px; }
-      .island { min-width: 76px; height: 36px; font-size: 0.9rem; padding: 6px; }
+      #map { width: min(520px, 95vw, calc(65vh * 4 / 3)); }
+      .island { border-width: 2px; }
     }
   </style>
 </head>
 <body>
   <h1>🗺️ Wähle eine Insel</h1>
 
-  <div id="map" aria-label="Schatzkarte">
-    <div id="skull" class="island" role="button" tabindex="0" onclick="explore('skull')">☠️ Skull Island</div>
-    <div id="treasure" class="island" role="button" tabindex="0" onclick="explore('treasure')">💰 Treasure Cove</div>
-    <div id="shark" class="island" role="button" tabindex="0" onclick="explore('shark')">🦈 Shark Bay</div>
+    <div id="map" aria-label="Schatzkarte">
+      <button id="skull" data-testid="skull" class="island" type="button" onclick="explore('skull')" aria-label="Skull Island">
+        <span class="sr-only">☠️ Skull Island</span>
+      </button>
+      <button id="treasure" data-testid="treasure" class="island" type="button" onclick="explore('treasure')" aria-label="Treasure Cove">
+        <span class="sr-only">💰 Treasure Cove</span>
+      </button>
+      <button id="shark" data-testid="shark" class="island" type="button" onclick="explore('shark')" aria-label="Shark Bay">
+        <span class="sr-only">🦈 Shark Bay</span>
+      </button>
     <!-- Codebeard: shown only in bug mode; has pirate icon and is new treasure location in bug mode -->
-    <div id="codebeard" class="island" role="button" tabindex="0" onclick="explore('codebeard')">🏴‍☠️ Codebeard</div>
-  </div>
+      <button id="codebeard" data-testid="codebeard" class="island" type="button" onclick="explore('codebeard')" aria-label="Codebeard">
+        <span class="sr-only">🏴‍☠️ Codebeard</span>
+      </button>
+    </div>
 
   <h2 id="result" aria-live="polite"></h2>
 
@@ -89,7 +126,10 @@
     // Wenn Bug-Mode aktiv, Codebeard sichtbar machen
     if (bugMode) {
       const cb = document.getElementById('codebeard');
-      if (cb) cb.style.display = 'flex';
+      if (cb) {
+        cb.style.display = 'inline-block';
+        cb.classList.add('island--icon');
+      }
     }
 
     // explore() behält Logik wie vorher — unterscheidet bugMode
@@ -128,12 +168,14 @@
 
     // Tastatur-Zugänglichkeit für Insel-Buttons
     document.querySelectorAll('.island').forEach(el => {
-      el.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          el.click();
-        }
-      });
+      if (el.tagName !== 'BUTTON') {
+        el.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            el.click();
+          }
+        });
+      }
     });
   </script>
 </body>

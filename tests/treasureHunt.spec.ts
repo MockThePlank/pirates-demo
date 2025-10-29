@@ -13,23 +13,21 @@ test('Pirate-Demo Tests', async ({ page }) => {
     await page.waitForTimeout(2000);
   });
   await test.step('visit Skull Island', async () => {
-    await page.getByRole('button', { name: '☠️ Skull Island' }).click();
+    await page.getByTestId('skull').click();
     await page.waitForTimeout(2000);
     await expect(page.getByRole('heading', { name: '☠️ Only ghosts and old bones...' })).toBeVisible();
     await page.waitForTimeout(2000);
   });
   await test.step('visit Shark Bay', async () => {
-    await page.getByRole('button', { name: '🦈 Shark Bay' }).click();
+    await page.getByTestId('shark').click();
     await page.waitForTimeout(2000);
     await expect(page.getByRole('heading', { name: '🦈 Just sharks here.' })).toBeVisible();
     await page.waitForTimeout(2000);
   });
   await test.step('find Treasure Cove', async () => {
-    await page.getByRole('button', { name: '💰 Treasure Cove' }).click();await page.waitForTimeout(2000);
+    await page.getByTestId('treasure').click();
     await page.waitForTimeout(2000);
     await expect(page.getByRole('heading', { name: '🎉 You found the treasure!' })).toBeVisible();
     await page.waitForTimeout(2000);
   });
-  
-  //await page.close();
 });
