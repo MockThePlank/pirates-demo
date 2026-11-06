@@ -1,6 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="de">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Piraten Login</title>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -8,9 +10,9 @@
   <h1>🏴‍☠️ Piraten Login</h1>
   <form action="/login" method="post">
     <label for="username">Captain:</label>
-    <input type="text" id="username" name="username"><br><br>
+    <input type="text" id="username" name="username" autocomplete="username" required><br><br>
     <label for="password">Passwort:</label>
-    <input type="password" id="password" name="password"><br><br>
+    <input type="password" id="password" name="password" autocomplete="current-password" required><br><br>
     <button type="submit">Segel setzen</button>
   </form>
 </body>

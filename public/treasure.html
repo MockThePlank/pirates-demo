@@ -96,21 +96,21 @@
 <body>
   <h1>🗺️ Wähle eine Insel</h1>
 
-    <div id="map" aria-label="Schatzkarte">
-      <button id="skull" data-testid="skull" class="island" type="button" onclick="explore('skull')" aria-label="Skull Island">
-        <span class="sr-only">☠️ Skull Island</span>
-      </button>
-      <button id="treasure" data-testid="treasure" class="island" type="button" onclick="explore('treasure')" aria-label="Treasure Cove">
-        <span class="sr-only">💰 Treasure Cove</span>
-      </button>
-      <button id="shark" data-testid="shark" class="island" type="button" onclick="explore('shark')" aria-label="Shark Bay">
-        <span class="sr-only">🦈 Shark Bay</span>
-      </button>
+  <div id="map" aria-label="Schatzkarte">
+    <button id="skull" data-testid="skull" class="island" type="button" onclick="explore('skull')" aria-label="Skull Island">
+      <span class="sr-only">☠️ Skull Island</span>
+    </button>
+    <button id="treasure" data-testid="treasure" class="island" type="button" onclick="explore('treasure')" aria-label="Treasure Cove">
+      <span class="sr-only">💰 Treasure Cove</span>
+    </button>
+    <button id="shark" data-testid="shark" class="island" type="button" onclick="explore('shark')" aria-label="Shark Bay">
+      <span class="sr-only">🦈 Shark Bay</span>
+    </button>
     <!-- Codebeard: shown only in bug mode; has pirate icon and is new treasure location in bug mode -->
-      <button id="codebeard" data-testid="codebeard" class="island" type="button" onclick="explore('codebeard')" aria-label="Codebeard">
-        <span class="sr-only">🏴‍☠️ Codebeard</span>
-      </button>
-    </div>
+    <button id="codebeard" data-testid="codebeard" class="island" type="button" onclick="explore('codebeard')" aria-label="Codebeard">
+      <span class="sr-only">🏴‍☠️ Codebeard</span>
+    </button>
+  </div>
 
   <h2 id="result" aria-live="polite"></h2>
 
@@ -135,27 +135,27 @@
     // explore() behält Logik wie vorher — unterscheidet bugMode
     function explore(place) {
       let msg;
-        if (bugMode) {
-          // In bug mode: the treasure is at CodeBeard. Shark Bay remains a shark bay.
-          if (place === 'codebeard') {
-            msg = '🎉 Captn CodeBeard stole the treasure!';
-          } else if (place === 'shark') {
-            msg = '🦈 Just sharks here.';
-          } else if (place === 'skull') {
-            msg = '☠️ Only ghosts and old bones...';
-          } else {
-            msg = '💨 Empty chests – someone was faster!';
-          }
+      if (bugMode) {
+        // In bug mode: the treasure is at CodeBeard. Shark Bay remains a shark bay.
+        if (place === 'codebeard') {
+          msg = '🎉 Captn CodeBeard stole the treasure!';
+        } else if (place === 'shark') {
+          msg = '🦈 Just sharks here.';
+        } else if (place === 'skull') {
+          msg = '☠️ Only ghosts and old bones...';
         } else {
-          // Normal mode: Treasure Cove is the correct island
-          if (place === 'treasure') {
-            msg = '🎉 You found the treasure!';
-          } else if (place === 'skull') {
-            msg = '☠️ Only ghosts and old bones...';
-          } else {
-            msg = '🦈 Just sharks here.';
-          }
+          msg = '💨 Empty chests – someone was faster!';
         }
+      } else {
+        // Normal mode: Treasure Cove is the correct island
+        if (place === 'treasure') {
+          msg = '🎉 You found the treasure!';
+        } else if (place === 'skull') {
+          msg = '☠️ Only ghosts and old bones...';
+        } else {
+          msg = '🦈 Just sharks here.';
+        }
+      }
 
       // Zeige Ergebnis im Dom
       const out = document.getElementById('result');
@@ -165,18 +165,6 @@
         alert(msg);
       }
     }
-
-    // Tastatur-Zugänglichkeit für Insel-Buttons
-    document.querySelectorAll('.island').forEach(el => {
-      if (el.tagName !== 'BUTTON') {
-        el.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            el.click();
-          }
-        });
-      }
-    });
   </script>
 </body>
 </html>

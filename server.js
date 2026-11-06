@@ -12,7 +12,7 @@ app.post('/login', (req, res) => {
     const bug = process.env.BUG_MODE === '1' ? 'true' : 'false';
     return res.redirect(`/treasure.html?bug=${bug}`);
   }
-  res.send('<h1>☠️ Falsches Passwort, Landratte!</h1><a href="/login.html">Zurück</a>');
+  res.status(401).send('<h1>☠️ Falsches Passwort, Landratte!</h1><a href="/login.html">Zurück</a>');
 });
 
 const PORT = process.env.PORT || 3000;

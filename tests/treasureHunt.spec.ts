@@ -22,6 +22,16 @@ test('Pirate-Demo Tests', async ({ page }) => {
   });
 });
 
+test('Wrong password is rejected', async ({ page }) => {
+  await page.goto('/login.html');
+  await page.getByRole('textbox', { name: 'Captain:' }).fill('JackSparrow');
+  await page.getByRole('textbox', { name: 'Passwort:' }).fill('water');
+  const responsePromise = page.waitForResponse('**/login');
+  await page.getByRole('button', { name: 'Segel setzen' }).click();
+  expect((await responsePromise).status()).toBe(401);
+  await expect(page.getByRole('heading', { name: '☠️ Falsches Passwort, Landratte!' })).toBeVisible();
+});
+
 test('Bug mode: Codebeard has the treasure', async ({ page }) => {
   await page.goto('/treasure.html?bug=true');
 
