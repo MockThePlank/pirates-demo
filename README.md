@@ -14,7 +14,7 @@ This application is intentionally simple and is meant to demonstrate how to run 
 
 ## Requirements
 
-- Node.js (LTS recommended) and npm/yarn
+- Node.js (LTS recommended) and npm
 - (For tests) Playwright (installed as a devDependency)
 
 ## Installation
@@ -59,20 +59,15 @@ The tests are in `tests/treasureHunt.spec.ts` and automate the following:
 - Open the login page
 - Log in with username `JackSparrow` and password `rum`
 - Navigate to several islands and assert headings
+- Bug mode: open `treasure.html?bug=true` and check that Codebeard has the treasure
 
 To run the tests:
-
-1. Start the server (in one terminal):
-
-```bash
-npm start
-```
-
-2. Run tests (in another terminal):
 
 ```bash
 npx playwright test
 ```
+
+Playwright starts the server on its own (`webServer` in `playwright.config.ts`). If a server is already running on port 3000, it is reused. For the bug mode demo, start the server with `BUG_MODE=1 npm start` first: the normal treasure hunt test then fails on purpose.
 
 Playwright will generate an HTML report (`playwright-report/index.html`). Open it with:
 
